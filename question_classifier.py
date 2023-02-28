@@ -184,7 +184,7 @@ def produce_model(embeddings_weight,model_name,freeze_pretrained,embedding_size,
         #out = BOW(input)
         return BOW
     elif model_name == 'bilstm':
-        BILSTM = BiLSTM(embedding_dim=embedding_size, hidden_dim = hidden_dim,pretrained_embedding=embeddings_weight)
+        BILSTM = BiLSTM(embedding_dim=embedding_size, hidden_dim = hidden_dim,pretrained_embedding=embeddings_weight,freeze_pretrained=freeze_pretrained)
         #out = BILSTM(input)
         return BILSTM
     #return out
@@ -296,14 +296,14 @@ class BagOfWords(nn.Module):
 
 
 class BiLSTM(nn.Module):
-    def __init__(self, embedding_dim, hidden_dim, pretrained_embedding):
+    def __init__(self, embedding_dim, hidden_dim, pretrained_embedding,freeze_pretrained):
         super(BiLSTM, self).__init__()
         self.hidden_dim = hidden_dim
         # self.word_embeddings = nn.Embedding(vocab_size, embedding_dim)
-        self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding )
+        self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding,freeze=freeze_pretrained)
         # The BiLSTM takes word embeddings as inputs, and outputs hidden states
         # with dimensionality hidden_dim.
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, bidirectional=True)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, bidirectional=True,batch_first=True)
         # The linear layer that maps from hidden state space to tag space
         # self.hidden2tag = nn.Linear(hidden_dim, tagset_size)
 
@@ -312,15 +312,19 @@ class BiLSTM(nn.Module):
 
 
         # lstm_out, _ = self.lstm(embeds.view(len(sentence), 1, -1))
-        lstm_out, _ = self.lstm(embeds)
+        lstm_out, (h_n,_) = self.lstm(embeds)
         #print(lstm_out.size())
-        #lstm_out = lstm_out[]
-        lstm_out = lstm_out[:,-1]
+        lstm_out = lstm_out.mean(dim=1)
+
+        final_hidden_state = torch.cat((h_n[0, :, :], h_n[1, :, :]), dim=1)
+        #print(final_hidden_state.size())
+        #print(final_hidden_state)
+        #lstm_out = lstm_out[:,-1]
        # print(lstm_out.size())
         #print(lstm_out.size())
         # tag_space = self.hidden2tag(lstm_out.view(len(sentence), -1))
         # tag_scores = nn.functional.log_softmax(tag_space, dim=1)
-        return lstm_out
+        return final_hidden_state
 
 '''
     Part7
@@ -331,8 +335,8 @@ class QuestionClassifier(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim):
         super(QuestionClassifier, self).__init__()
         self.fc1 = nn.Linear(input_dim, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim, hidden_dim*2)
-        self.fc3 = nn.Linear(hidden_dim*2, output_dim)
+        #self.fc2 = nn.Linear(hidden_dim, hidden_dim*2)
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
@@ -340,8 +344,8 @@ class QuestionClassifier(nn.Module):
         x = self.fc1(x)
         #print(x[0])
         #x = nn.functional.relu(x)
-        x = self.fc2(x)
         x = self.fc3(x)
+        #x = self.fc3(x)
         #print(x[0])
         x = self.softmax(x)
         #print(x[0])
@@ -472,21 +476,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     ''''''
-    k = 2
+    k = 10
     train_path = 'data/train_5500.label.txt'
     test_path = 'data/TREC_10.label.txt'
     glove_path = 'glove.small/glove.small.txt'
-    stop_words_list = ['a', 'and', 'but', 'not', 'up','!','.']
-    model_name = 'bow' # 'bow'
+    stop_words_list = ['a', 'and', 'but', 'not', 'up','!','.','what','why','how','$1','$5','&',"'","''","'clock","'em","'hara","'l","'ll","'n","'re","'s"
+                       ,"'t","'ve",",",'-']
+    model_name = 'bilstm' # 'bow'
     label_mode = 'coarse' # 'coarse'
-    embedding_mode = 'random' # 'pretrained'
-    freeze_pretrained = True # True
+    embedding_mode = 'pretrained' # 'pretrained'
+    freeze_pretrained = False # True
     embedding_dim = 200
     max_len = 36
     split_coef = 0.9
-    batch_size = 200
-    learning_rate = 0.5
-    hidden_dim = 15
+    batch_size = 100
+    learning_rate = 0.9
+    hidden_dim = 150
     input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
     hidden_dim2 = 400
     n_classes = 6 if label_mode == 'coarse' else 50
@@ -496,7 +501,8 @@ if __name__ == '__main__':
     dict_vocab, embeddings = create_word_embedding(k=k, all_sentences=train_sentences, embedding_mode=embedding_mode,
                                                    stop_words=stop_words_list,embedding_size=embedding_dim
                                                    )
-
+    print(dict_vocab)
+    print(embeddings)
     train_label_fine_replaced = label_preprocess(train_labels_fine)
     train_label_coarse_replaced = label_preprocess(train_labels_coarse)
 
@@ -526,7 +532,7 @@ if __name__ == '__main__':
     #optimizer = optim.SGD(model.parameters(),lr=1e-3, weight_decay=args.weight_decay, momentum=0.9)
     Classifier = QuestionClassifier(input_dim=input_dim, hidden_dim=hidden_dim2, output_dim=n_classes)
     optimizer = optim.SGD([{'params': model.parameters()},
-                             {'params': Classifier.parameters()}], lr=learning_rate)
+                             {'params': Classifier.parameters()}], lr=learning_rate,weight_decay=0.001)
 
 
     Trainer = ClassifierTrainer(model=model, classifier=Classifier, train_loader=trainset_loader, test_loader=devset_loader,
