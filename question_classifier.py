@@ -5,6 +5,8 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, random_split
 import torch.optim as optim
 import argparse
+from sklearn.metrics import f1_score
+import yaml
 
 parser = argparse.ArgumentParser()
 
@@ -167,23 +169,23 @@ def create_word_embedding(k, all_sentences, embedding_mode, stop_words,embedding
     return dict_emb,embeddings_weight
 
 
-def produce_model(embeddings_weight,model_name,freeze_pretrained,embedding_size):
+def produce_model(embeddings_weight,model_name,freeze_pretrained,embedding_size,hidden_dim):
     #sentences_replaced = replace_with_dict(sentences,dict_vocab)
     #sentences_aligned = align_sentence(sentences_replaced, max_len)
     #weight = torch.FloatTensor(embeddings)
-    input = torch.tensor(sentences_aligned)
+    #input = torch.tensor(sentences_aligned)
     if freeze_pretrained:
         embeddings_weight.requires_grad = False
     else:
         embeddings_weight.requires_grad = True
     if model_name == 'bow':
-        BOW = BagOfWords( embedding_dim = embedding_size,pretrained_embedding=embeddings_weight)
+        BOW = BagOfWords( pretrained_embedding=embeddings_weight)
         # print(sentences_aligned)
         # print(len(sentences_aligned))
         #out = BOW(input)
         return BOW
     elif model_name == 'bilstm':
-        BILSTM = BiLSTM(embedding_dim=50, hidden_dim = 15,pretrained_embedding=embeddings_weight)
+        BILSTM = BiLSTM(embedding_dim=embedding_size, hidden_dim = hidden_dim,pretrained_embedding=embeddings_weight)
         #out = BILSTM(input)
         return BILSTM
     #return out
@@ -272,7 +274,7 @@ def align_sentence(sentences, max_len):
 
 
 class BagOfWords(nn.Module):
-    def __init__(self, embedding_dim, pretrained_embedding):
+    def __init__(self,  pretrained_embedding):
         super(BagOfWords, self).__init__()
         self.embedding = nn.Embedding.from_pretrained(pretrained_embedding, padding_idx=1)
 
@@ -290,7 +292,7 @@ class BiLSTM(nn.Module):
         super(BiLSTM, self).__init__()
         self.hidden_dim = hidden_dim
         # self.word_embeddings = nn.Embedding(vocab_size, embedding_dim)
-        self.word_embeddings = nn.Embedding.from_pretrained(pretrained_embedding, padding_idx=1)
+        self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding, padding_idx=1)
         # The BiLSTM takes word embeddings as inputs, and outputs hidden states
         # with dimensionality hidden_dim.
         self.lstm = nn.LSTM(embedding_dim, hidden_dim, bidirectional=True)
@@ -298,13 +300,15 @@ class BiLSTM(nn.Module):
         # self.hidden2tag = nn.Linear(hidden_dim, tagset_size)
 
     def forward(self, sentence):
-        embeds = self.word_embeddings(sentence)
+        embeds = self.embeddings(sentence)
 
 
         # lstm_out, _ = self.lstm(embeds.view(len(sentence), 1, -1))
         lstm_out, _ = self.lstm(embeds)
-        lstm_out = lstm_out.mean(dim=1)
-        # lstm_out = lstm_out[-1]
+        #print(lstm_out.size())
+        #lstm_out = lstm_out[]
+        lstm_out = lstm_out[:,-1]
+       # print(lstm_out.size())
         #print(lstm_out.size())
         # tag_space = self.hidden2tag(lstm_out.view(len(sentence), -1))
         # tag_scores = nn.functional.log_softmax(tag_space, dim=1)
@@ -322,13 +326,15 @@ class QuestionClassifier(nn.Module):
         self.fc2 = nn.Linear(hidden_dim, output_dim)
         self.softmax = nn.Softmax(dim=1)
 
-    def forward(self, sentence):
-        x = self.fc1(sentence)
+    def forward(self, x):
+        #print(x[0])
+        x = self.fc1(x)
+        #print(x[0])
         #x = nn.functional.relu(x)
         x = self.fc2(x)
-        #print(x.size())
+        #print(x[0])
         x = self.softmax(x)
-        #print(x.size())
+        #print(x[0])
         return x
 
 
@@ -339,13 +345,13 @@ class QuestionClassifier(nn.Module):
 
 class ClassifierTrainer(object):
 
-    def __init__(self, model, classifier, train_loader, val_loader, optimizer, loss_fn, \
+    def __init__(self, model, classifier, train_loader, test_loader, optimizer, loss_fn, \
                  model_name, embedding_mode, label_mode,freeze_embedding):
         self.optimizer = optimizer
         self.model = model
         self.classifier = classifier
         self.train_loader = train_loader
-        self.val_loader = val_loader
+        self.test_loader = test_loader
         self.loss_fn = loss_fn
         self.model_name = model_name
         self.embedding_mode = embedding_mode
@@ -356,6 +362,8 @@ class ClassifierTrainer(object):
         self.classifier.train()
         for epoch in range(n_epochs):
             #print(self.model.embedding.weight)
+            temp_acc = 0
+            temp_result = 0
             for inputs, labels in self.train_loader:
 
                 sentence_repr = self.model(inputs)
@@ -374,7 +382,7 @@ class ClassifierTrainer(object):
                 #print(self.classifier.fc1.weight.grad)
 
                 loss.backward()
-                print(self.classifier.fc1.weight.grad)
+                #print(self.classifier.fc1.weight.grad)
                 #print(self.classifier.fc1.weight)
                 self.optimizer.step()
                 #print(self.classifier.fc1.weight)
@@ -385,13 +393,44 @@ class ClassifierTrainer(object):
                 correct_points = torch.sum(results.long())
 
                 acc = correct_points.float() / results.size()[0]
+                temp_acc += correct_points.float()
+                temp_result += results.size()[0]
 
             if (epoch + 1) % 1 == 0:
                 print('Hidden layer weights at epoch', epoch)
-                print(self.classifier.fc1.weight)
+                print('acc',temp_acc/temp_result *100)
+                #print(self.classifier.fc1.weight)
+                self.validate()
+
 
     def validate(self):
-        self.model.eval()
+        with torch.no_grad():
+            temp_label = []
+            temp_pred = []
+            for inputs, labels in self.test_loader:
+                print(self.model.embeddings.weight)
+                print(inputs[0])
+                sentence_repr = self.model(inputs)
+                print(sentence_repr[0])
+                print(sentence_repr.size())
+                outputs = self.classifier(sentence_repr)
+                print(outputs.size())
+                print(outputs[0])
+                _, pred = torch.max(outputs.data, 1)
+                #temp_label.append(labels.cpu().numpy())
+               # temp_pred.append(pred.cpu().numpy())
+                for i in labels:
+                    temp_label.append(i.item())
+                    #print(i.item())
+                for j in  pred:
+                    temp_pred.append(j.item())
+            print(temp_label)
+            print(temp_pred)
+            print(len(temp_pred))
+            print(len(temp_label))
+            f1 = f1_score(temp_label, temp_pred,average='macro')
+
+            print(f1)
 
 
 def label_preprocess(labels):
@@ -416,12 +455,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     ''''''
-    k = 5
+    k = 2
     train_path = 'data/train_5500.label.txt'
     test_path = 'data/TREC_10.label.txt'
     glove_path = 'glove.small/glove.small.txt'
     stop_words_list = ['a', 'and', 'but', 'not', 'up']
-    model_name = 'bow' # 'bow'
+    model_name = 'bilstm' # 'bow'
     label_mode = 'fine' # 'coarse'
     embedding_mode = 'pretrained' # 'pretrained'
     freeze_pretrained = False # True
@@ -429,33 +468,50 @@ if __name__ == '__main__':
     max_len = 30
     split_coef = 0.9
     batch_size = 20
-    learning_rate = 0.15
+    learning_rate = 5
+    hidden_dim = 15
+    input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
+    hidden_dim2 = 400
     ''''''
 
-    sentences, labels_fine, labels_coarse = load_data(train_path)
-    dict_vocab, embeddings = create_word_embedding(k=k, all_sentences=sentences, embedding_mode=embedding_mode,
+    train_sentences, train_labels_fine, train_labels_coarse = load_data(train_path)
+    dict_vocab, embeddings = create_word_embedding(k=k, all_sentences=train_sentences, embedding_mode=embedding_mode,
                                                    stop_words=stop_words_list,embedding_size=embedding_dim
                                                    )
-    label_fine_replaced = label_preprocess(labels_fine)
-    label_coarse_replaced = label_preprocess(labels_coarse)
 
-    sentences_replaced = replace_with_dict(sentences, dict_vocab)
-    sentences_aligned = align_sentence(sentences_replaced, max_len=max_len)
-    input = torch.tensor(sentences_aligned)
-    dataset = construct_dataset(input, label_fine_replaced, label_coarse_replaced, label_mode=label_mode)
-    train_set, dev_set = split_dataset(dataset, split_coef=split_coef)
+    train_label_fine_replaced = label_preprocess(train_labels_fine)
+    train_label_coarse_replaced = label_preprocess(train_labels_coarse)
+
+    train_sentences_replaced = replace_with_dict(train_sentences, dict_vocab)
+    train_sentences_aligned = align_sentence(train_sentences_replaced, max_len=max_len)
+
+    train_input = torch.tensor(train_sentences_aligned)
+    traindataset = construct_dataset(train_input, train_label_fine_replaced, train_label_coarse_replaced, label_mode=label_mode)
+    train_set, dev_set = split_dataset(traindataset, split_coef=split_coef)
     trainset_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=4)
+    devset_loader = torch.utils.data.DataLoader(dev_set, batch_size=batch_size, shuffle=True, num_workers=4)
 
-    model = produce_model(embeddings, model_name=model_name,freeze_pretrained=False,embedding_size=embedding_dim)
+    test_sentences, test_labels_fine, test_labels_coarse = load_data(test_path)
+    test_label_fine_replaced = label_preprocess(test_labels_fine)
+    test_label_coarse_replaced = label_preprocess(test_labels_coarse)
+    test_sentences_replaced = replace_with_dict(test_sentences, dict_vocab)
+    test_sentences_aligned = align_sentence(test_sentences_replaced, max_len=max_len)
+    test_input = torch.tensor(test_sentences_aligned)
+    testdataset = construct_dataset(test_input, test_label_fine_replaced, test_label_coarse_replaced,
+                                label_mode=label_mode)
+    testset_loader = torch.utils.data.DataLoader(testdataset, batch_size=batch_size, shuffle=True, num_workers=4)
+
+    model = produce_model(embeddings, model_name=model_name,freeze_pretrained=False,embedding_size=embedding_dim,hidden_dim=hidden_dim)
     #input = torch.tensor(sentences_aligned)
 
 
     #optimizer = optim.SGD(model.parameters(),lr=1e-3, weight_decay=args.weight_decay, momentum=0.9)
-    Classifier = QuestionClassifier(input_dim=200, hidden_dim=100, output_dim=50)
-    optimizer = optim.SGD(Classifier.parameters(), lr=learning_rate)
+    Classifier = QuestionClassifier(input_dim=input_dim, hidden_dim=hidden_dim2, output_dim=50)
+    optimizer = optim.SGD([{'params': model.parameters()},
+                             {'params': Classifier.parameters()}], lr=learning_rate)
 
 
-    Trainer = ClassifierTrainer(model=model, classifier=Classifier, train_loader=trainset_loader, val_loader=0,
+    Trainer = ClassifierTrainer(model=model, classifier=Classifier, train_loader=trainset_loader, test_loader=devset_loader,
                               optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name, embedding_mode= embedding_mode
                                                 ,label_mode = label_mode, freeze_embedding=freeze_pretrained)
-    Trainer.train(5)
+    Trainer.train(10)
