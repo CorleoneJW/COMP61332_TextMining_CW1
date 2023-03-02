@@ -12,8 +12,8 @@ import configparser
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, help='Configuration file',default='config.ini')
-parser.add_argument('--train', action='store_true', help='Training mode - model is saved')
-parser.add_argument('--test', action='store_true', help='Testing mode - needs a model to load',default=True)
+parser.add_argument('--train', action='store_true', help='Training mode - model is saved',default=True)
+parser.add_argument('--test', action='store_true', help='Testing mode - needs a model to load')
 
 
 '''
@@ -478,6 +478,7 @@ class ClassifierTrainer(object):
 
     def train(self, n_epochs):
         self.classifier.train()
+        best_f1 = 0
         for epoch in range(n_epochs):
             temp_acc = 0
             temp_result = 0
@@ -497,13 +498,13 @@ class ClassifierTrainer(object):
                 print('Performance with epoch', epoch+1)
                 acc= (temp_acc/temp_result *100).item()
                 print('acc-train: ', acc)
-                best_weights,best_f1 = self.validate(epoch)
-        print(best_f1)
+                best_f1 = self.validate(epoch,best_f1)
+        print('Best F1-score: ',best_f1)
 
 
-    def validate(self,epoch):
+    def validate(self,epoch,best_f1):
         self.classifier.eval()
-        best_f1 = 0
+
 
         with torch.no_grad():
             temp_label = []
@@ -526,11 +527,11 @@ class ClassifierTrainer(object):
             acc = (temp_acc / temp_result * 100).item()
             print('acc-dev: ', acc)
             f1 = f1_score(temp_label, temp_pred,average='macro') * 100
-            if f1 >= best_f1:
-                best_f1 = f1
+
             cm = confusion_matrix(temp_label, temp_pred)
             #print(model.embeddings.weight)
-            print(f1)
+            print('F1-Score: ', f1)
+            print('Confusion Matrix:')
             print(cm)
             if epoch == 0:
                 best_weights = self.classifier.state_dict()
@@ -541,7 +542,7 @@ class ClassifierTrainer(object):
                     best_f1 = f1
                     best_weights = self.classifier.state_dict()
                     torch.save(self.classifier.state_dict(), 'trained_model.pth')
-            return best_weights,best_f1
+            return best_f1
 
 
 
@@ -577,8 +578,10 @@ class ClassifierTrainer(object):
                 output_file.write(str('Final acc for test set: '+ str(acc)+'\n'))
                 output_file.write(str('Final F1-score for test set: ' + str(f1)))
 
-            print(f1)
+            print('F1-Score: ',f1)
+            print('Confusion Matrix:')
             print(cm)
+            print()
 
 
 if __name__ == '__main__':
@@ -612,7 +615,7 @@ if __name__ == '__main__':
     #test_path = './data/TREC_10.label.txt'
     #glove_path = './data/glove.small.txt'
 
-    stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', 'what', 'why', 'how', '$1', '$5', '&', "'", "''",
+    stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', '$1', '$5', '&', "'", "''",
                 "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
     #stop_words = [    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
@@ -667,7 +670,7 @@ if __name__ == '__main__':
     trainset_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     dev_dataset = QuestionDataset(dev_input, dev_label)
     devset_loader = torch.utils.data.DataLoader(dev_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-    test_dataset = QuestionDataset(test_input, dev_label)
+    test_dataset = QuestionDataset(test_input, test_label)
     testset_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
 
 
@@ -683,6 +686,8 @@ if __name__ == '__main__':
                                 optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name,
                                 embedding_mode=embedding_mode
                                 , label_mode=label_mode, freeze_embedding=freeze_pretrained)
+    #Trainer.test(output_path)
+
     if args.train:
         # call train function
         Trainer.train(n_epoch)
