@@ -7,28 +7,13 @@ import argparse
 from sklearn.metrics import f1_score
 import re
 from sklearn.metrics import confusion_matrix
-import numpy as np
 import configparser
 
 
-
-config = configparser.ConfigParser()
-config.sections()
-#config.read("config.ini")
-#print(config.keys())
-#path_train = config["PATH"]["path_train"]
-#path_dev = config["PATH"]["path_dev"]
-#path_test = config["PATH"]["path_test"]
-
-
-
-
-
-#np.set_printoptions(edgeitems=25)
 parser = argparse.ArgumentParser()
-parser.add_argument('--config', type=str, required=True, help='Configuration file')
+parser.add_argument('--config', type=str, help='Configuration file',default='config.ini')
 parser.add_argument('--train', action='store_true', help='Training mode - model is saved')
-parser.add_argument('--test', action='store_true', help='Testing mode - needs a model to load')
+parser.add_argument('--test', action='store_true', help='Testing mode - needs a model to load',default=True)
 
 
 '''
@@ -49,7 +34,6 @@ random.seed(1)
         1.2 prune glove data, including create a vocabulary-dict, also, handling duplicated words.
                 output: dict, embeddings
 '''
-
 def load_glove(glove_path):
     #   Read line by line
     #   handle specific chars and lowercase
@@ -510,14 +494,17 @@ class ClassifierTrainer(object):
                 temp_acc += correct_points.float()
                 temp_result += results.size()[0]
             if (epoch + 1) % 1 == 0:
-                print('Performance with epoch', epoch)
+                print('Performance with epoch', epoch+1)
                 acc= (temp_acc/temp_result *100).item()
                 print('acc-train: ', acc)
-                self.validate()
+                best_weights,best_f1 = self.validate(epoch)
+        print(best_f1)
 
 
-    def validate(self):
+    def validate(self,epoch):
         self.classifier.eval()
+        best_f1 = 0
+
         with torch.no_grad():
             temp_label = []
             temp_pred = []
@@ -539,15 +526,26 @@ class ClassifierTrainer(object):
             acc = (temp_acc / temp_result * 100).item()
             print('acc-dev: ', acc)
             f1 = f1_score(temp_label, temp_pred,average='macro') * 100
+            if f1 >= best_f1:
+                best_f1 = f1
             cm = confusion_matrix(temp_label, temp_pred)
             #print(model.embeddings.weight)
             print(f1)
             print(cm)
-            #print(model.embeddings.weight)
-        #self.model.train()
+            if epoch == 0:
+                best_weights = self.classifier.state_dict()
+                torch.save(self.classifier.state_dict(), 'trained_model.pth')
+                best_f1 = f1
+            else:
+                if f1 >= best_f1:
+                    best_f1 = f1
+                    best_weights = self.classifier.state_dict()
+                    torch.save(self.classifier.state_dict(), 'trained_model.pth')
+            return best_weights,best_f1
 
 
-    def test(self):
+
+    def test(self,output_path):
         self.classifier.eval()
         with torch.no_grad():
             temp_label = []
@@ -571,27 +569,48 @@ class ClassifierTrainer(object):
             print('acc-test: ', acc)
             f1 = f1_score(temp_label, temp_pred,average='macro') * 100
             cm = confusion_matrix(temp_label, temp_pred)
-            #print(model.embeddings.weight)
+            with open(output_path, "w") as output_file:
+                #output_file.write()
+                for i in range(len(temp_label)):
+                    str1 = str('Original Label: '+str(temp_label[i])+', \t' +' Prediction: '+ str(temp_pred[i])+'\n')
+                    output_file.write(str1)
+                output_file.write(str('Final acc for test set: '+ str(acc)+'\n'))
+                output_file.write(str('Final F1-score for test set: ' + str(f1)))
+
             print(f1)
             print(cm)
 
 
 if __name__ == '__main__':
+    args = parser.parse_args()
+    config = configparser.ConfigParser()
+    config.sections()
+    config.read(args.config)
+    train_path = config['data_path']["train_path"]
+    glove_path = config['data_path']["glove_path"]
+    test_path = config['data_path']["test_path"]
+    model_name = config['model_params']['model_name'] # 'bow'
+    label_mode =  config['model_params']['label_mode']  # 'coarse'
+    embedding_mode = config['model_params']['embedding_mode']  # 'pretrained'
+    freeze_pretrained = bool(config['model_params']['freeze_pretrained']) # True
+    embedding_dim = int(config['sentence_params']['embedding_dim'])
+    max_len = int(config['sentence_params']['max_len'])
+    k = int(config['sentence_params']['k'])
+    split_coef = 0.9
+    batch_size = int(config['hyperparameters']['batch_size'])
+    learning_rate = float(config['hyperparameters']['learning_rate'] )#0.007
+    hidden_dim = int(config['hyperparameters']['hidden_dim']) #300
+    input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
+    hidden_dim2 = int(config['hyperparameters']['hidden_dim2'])#800
+    n_classes = 6 if label_mode == 'coarse' else 50
+    n_epoch = int(config['hyperparameters']['epochs'])#10
+    output_path = config['data_path']['output_path']
 
-
-    torch.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, profile=None)
-    #args = parser.parse_args()
-    #if args.train:
-        # call train function
-        #train(args.config)
-    #elif args.test:
-        # call test function
-        #test(args.config)
     ''''''
-    k = 5
-    train_path = './data/train_5500.label.txt'
-    test_path = './data/TREC_10.label.txt'
-    glove_path = './data/glove.small.txt'
+    #k = 5
+    #train_path = './data/train_5500.label.txt'
+    #test_path = './data/TREC_10.label.txt'
+    #glove_path = './data/glove.small.txt'
 
     stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', 'what', 'why', 'how', '$1', '$5', '&', "'", "''",
                 "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
@@ -600,19 +619,20 @@ if __name__ == '__main__':
     #                , '!', '.', '$1', '$5', '&', "'", "''",
     #            "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
     #    , "'t", "'ve", ",", '-', '?', ':', '``', '`']
-    model_name = 'bilstm'  # 'bow'
-    label_mode = 'fine'  # 'coarse'
-    embedding_mode = 'pretrained'  # 'pretrained'
-    freeze_pretrained = False # True
-    embedding_dim = 300
-    max_len = 32
-    split_coef = 0.9
-    batch_size = 400
-    learning_rate = 0.005
-    hidden_dim = 300
-    input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
-    hidden_dim2 = 800
-    n_classes = 6 if label_mode == 'coarse' else 50
+    #model_name = 'bilstm'  # 'bow'
+    #label_mode = 'fine'  # 'coarse'
+    #embedding_mode = 'pretrained'  # 'pretrained'
+    #freeze_pretrained = False # True
+    #embedding_dim = 300
+    #max_len = 32
+    #split_coef = 0.9
+    #batch_size = 300
+    #learning_rate = 0.007
+    #hidden_dim = 300
+    #input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
+    #hidden_dim2 = 800
+    #n_classes = 6 if label_mode == 'coarse' else 50
+    #n_epoch = 10
     ''''''
 
     train_sentences, train_labels_F, train_labels_C = load_data(train_path)
@@ -632,8 +652,6 @@ if __name__ == '__main__':
     dict_vocabs, embeddings = create_word_embedding(embedding_mode=embedding_mode,vocabs=vocabs,
                                                     embedding_size=embedding_dim,glove_path=glove_path
                                                     )
-    print(dict_vocabs)
-    print(embeddings)
 
     train_input,train_label = data_preprocess(sentence=train_data,label_c=train_labels_c,label_f=train_labels_f,
                                               max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs,
@@ -665,5 +683,10 @@ if __name__ == '__main__':
                                 optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name,
                                 embedding_mode=embedding_mode
                                 , label_mode=label_mode, freeze_embedding=freeze_pretrained)
-    Trainer.train(10)
-    Trainer.test()
+    if args.train:
+        # call train function
+        Trainer.train(n_epoch)
+    elif args.test:
+        # call test function
+        Classifier.load_state_dict(torch.load('trained_model.pth'))
+        Trainer.test(output_path)
