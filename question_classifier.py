@@ -7,7 +7,9 @@ import argparse
 from sklearn.metrics import f1_score
 import re
 from sklearn.metrics import confusion_matrix
+import numpy as np
 
+#np.set_printoptions(edgeitems=25)
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, required=True, help='Configuration file')
 parser.add_argument('--train', action='store_true', help='Training mode - model is saved')
@@ -295,8 +297,8 @@ class BagOfWords(nn.Module):
         y = torch.count_nonzero(x, dim=1)
         z = find_sentence_length(x)
         embedded = self.embeddings(x)  # [ batch size, max sentence length, embedding dim ]
-        prefix = 1/ torch.Tensor(z).reshape(x.size()[0],1) # [ batch size, 1]
-        #prefix = 1 / y.reshape(x.size()[0], 1)
+        #prefix = 1/ torch.Tensor(z).reshape(x.size()[0],1) # [ batch size, 1]
+        prefix = 1 / y.reshape(x.size()[0], 1)
         temp_sum = torch.sum(embedded, dim=1)  # [ batch size, embedding dim ]
         output = prefix * temp_sum
         return output # [ batch size, embedding dim ]
@@ -346,11 +348,11 @@ class QuestionDataset(Dataset):
         7.3 enconde sentence with dict, also align sentence to a predefined length
 
 '''
-def data_preprocess(sentence,label_f,label_c,dict_vocabs,max_len,label_mode):
+def data_preprocess(sentence,label_f,label_c,dict_vocabs,max_len,label_mode,dict_labels_F,dict_labels_C):
     #   Entry func
     #   process both coarse and fine labels, coarse -> C, fine -> F
-    labels_F_encoded = label_preprocess(label_f)
-    labels_C_encoded = label_preprocess(label_c)
+    labels_F_encoded = label_preprocess(label_f,dict_labels_F)
+    labels_C_encoded = label_preprocess(label_c,dict_labels_C)
     sentences_encoded = encode_sentence(sentence, dict_vocabs)
     sentences_aligned = align_sentence(sentences_encoded, max_len=max_len)
     input = torch.tensor(sentences_aligned)
@@ -361,20 +363,33 @@ def data_preprocess(sentence,label_f,label_c,dict_vocabs,max_len,label_mode):
     return input,labels
 
 
-def label_preprocess(labels):
+def create_label_dict(all_labels):
+    labels_set = set(all_labels)
+    list1 = list(labels_set)
+    list1.sort()
+    dict_labels = {}
+    ind = 0
+    for i in list1:
+        dict_labels[i] = ind
+        ind += 1
+    return dict_labels
+
+
+def label_preprocess(labels,dict_labels):
     #   Using set to get unique label and sort to get a dict
     #   encode labels with dict values (num)
     labels_set = set(labels)
     list1 = list(labels_set)
     list1.sort()
-    dict_labels ={}
-    ind = 0
-    for i in list1:
-        dict_labels[i] = ind
-        ind += 1
+    #dict_labels ={}
+    #ind = 0
+    #for i in list1:
+    #    dict_labels[i] = ind
+    #    ind += 1
     new_list = []
     for i in labels:
         new_list.append(dict_labels[i])
+    #print(dict_labels)
     return new_list
 
 
@@ -421,7 +436,7 @@ class QuestionClassifier(nn.Module):
         super(QuestionClassifier, self).__init__()
         self.fc1 = nn.Linear(input_dim, output_dim)
         self.bn1 = nn.BatchNorm1d(output_dim)
-        self.dropout1 = nn.Dropout(0.5)
+        self.dropout1 = nn.Dropout(0.3)
         self.fc2 = nn.Linear(hidden_dim, output_dim)
         #self.fc3 = nn.Linear(hidden_dim, output_dim)
         self.softmax = nn.Softmax(dim=1)
@@ -509,8 +524,8 @@ class ClassifierTrainer(object):
             print(f1)
             print(cm)
         self.model.train()
-        
-        
+
+
     def test(self):
         self.classifier.eval()
         with torch.no_grad():
@@ -521,7 +536,7 @@ class ClassifierTrainer(object):
             for inputs, labels in self.test_loader:
                 sentence_repr = self.model(inputs)
                 outputs = self.classifier(sentence_repr)
-                loss = self.loss_fn(outputs, labels)
+                #loss = self.loss_fn(outputs, labels)
                 _, pred = torch.max(outputs.data, 1)
                 for i in labels:
                     temp_label.append(i.item())
@@ -532,7 +547,7 @@ class ClassifierTrainer(object):
                 temp_acc += correct_points.float()
                 temp_result += results.size()[0]
             acc = (temp_acc / temp_result * 100).item()
-            print('acc-dev: ', acc)
+            print('acc-test: ', acc)
             f1 = f1_score(temp_label, temp_pred,average='macro') * 100
             cm = confusion_matrix(temp_label, temp_pred)
             #print(model.embeddings.weight)
@@ -541,8 +556,7 @@ class ClassifierTrainer(object):
 
 
 if __name__ == '__main__':
-
-
+    torch.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, profile=None)
     #args = parser.parse_args()
     #if args.train:
         # call train function
@@ -561,22 +575,26 @@ if __name__ == '__main__':
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
     model_name = 'bilstm'  # 'bow'
     label_mode = 'fine'  # 'coarse'
-    embedding_mode = 'random'  # 'pretrained'
+    embedding_mode = 'pretrained'  # 'pretrained'
     freeze_pretrained = False  # True
     embedding_dim = 300
     max_len = 32
     split_coef = 0.9
-    batch_size = 50
-    learning_rate = 0.001
-    hidden_dim = 200
+    batch_size = 100
+    learning_rate = 0.007
+    hidden_dim = 300
     input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
     hidden_dim2 = 800
     n_classes = 6 if label_mode == 'coarse' else 50
     ''''''
 
     train_sentences, train_labels_F, train_labels_C = load_data(train_path)
-    test_sentences, test_labels_F, test_labels_C = load_data(train_path)
+    test_sentences, test_labels_F, test_labels_C = load_data(test_path)
     data = list(zip(train_sentences, train_labels_F,train_labels_C))
+
+    dict_labels_F = create_label_dict(train_labels_F)
+    dict_labels_C = create_label_dict(train_labels_C)
+
     #random.shuffle(data)
     split_index = int(len(train_sentences) * split_coef)
     train_data, train_labels_f,train_labels_c = zip(*data[:split_index])
@@ -590,20 +608,23 @@ if __name__ == '__main__':
     print(dict_vocabs)
 
     train_input,train_label = data_preprocess(sentence=train_data,label_c=train_labels_c,label_f=train_labels_f,
-                                              max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs)
+                                              max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs,
+                                              dict_labels_C=dict_labels_C,dict_labels_F=dict_labels_F)
     dev_input, dev_label = data_preprocess(sentence=dev_data, label_c=dev_labels_c, label_f=dev_labels_f,
-                                               max_len=max_len, label_mode=label_mode,dict_vocabs=dict_vocabs)
+                                               max_len=max_len, label_mode=label_mode,dict_vocabs=dict_vocabs,
+                                           dict_labels_C=dict_labels_C,dict_labels_F=dict_labels_F)
     test_input, test_label = data_preprocess(sentence=test_sentences, label_c=test_labels_C, label_f=test_labels_F,
-                                           max_len=max_len, label_mode=label_mode, dict_vocabs=dict_vocabs)
-    
+                                           max_len=max_len, label_mode=label_mode, dict_vocabs=dict_vocabs,
+                                             dict_labels_C=dict_labels_C,dict_labels_F=dict_labels_F)
+
     train_dataset = QuestionDataset(train_input, train_label)
     trainset_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     dev_dataset = QuestionDataset(dev_input, dev_label)
     devset_loader = torch.utils.data.DataLoader(dev_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     test_dataset = QuestionDataset(test_input, dev_label)
     testset_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-    
-    
+
+
     model = produce_model(embeddings, model_name=model_name, freeze_pretrained=freeze_pretrained,
                           embedding_size=embedding_dim, hidden_dim=hidden_dim)
     # optimizer = optim.SGD(model.parameters(),lr=1e-3, weight_decay=args.weight_decay, momentum=0.9)
@@ -616,4 +637,5 @@ if __name__ == '__main__':
                                 optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name,
                                 embedding_mode=embedding_mode
                                 , label_mode=label_mode, freeze_embedding=freeze_pretrained)
-    Trainer.train(11)
+    Trainer.train(10)
+    Trainer.test()
