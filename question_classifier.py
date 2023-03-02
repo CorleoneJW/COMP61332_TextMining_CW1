@@ -514,7 +514,7 @@ class ClassifierTrainer(object):
 if __name__ == '__main__':
 
 
-    args = parser.parse_args()
+    #args = parser.parse_args()
     #if args.train:
         # call train function
         #train(args.config)
@@ -530,16 +530,16 @@ if __name__ == '__main__':
     stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', 'what', 'why', 'how', '$1', '$5', '&', "'", "''",
                        "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
-    model_name = 'bow'  # 'bow'
+    model_name = 'bilstm'  # 'bow'
     label_mode = 'fine'  # 'coarse'
-    embedding_mode = 'random'  # 'pretrained'
+    embedding_mode = 'pretrained'  # 'pretrained'
     freeze_pretrained = False  # True
-    embedding_dim = 400
+    embedding_dim = 300
     max_len = 32
     split_coef = 0.9
     batch_size = 50
     learning_rate = 0.001
-    hidden_dim = 600
+    hidden_dim = 200
     input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
     hidden_dim2 = 800
     n_classes = 6 if label_mode == 'coarse' else 50
@@ -569,19 +569,13 @@ if __name__ == '__main__':
     dev_dataset = QuestionDataset(dev_input, dev_label)
     devset_loader = torch.utils.data.DataLoader(dev_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
 
-    #train_sentences_aligned = align_sentence(train_sentences_encoded, max_len=max_len)
-    #train_input = torch.tensor(train_sentences_aligned)
-
-    #traindataset = construct_dataset(train_input, labels_fine=train_labels_F_encoded, labels_coarse=train_labels_C_encoded, label_mode=label_mode)
     model = produce_model(embeddings, model_name=model_name, freeze_pretrained=freeze_pretrained,
                           embedding_size=embedding_dim, hidden_dim=hidden_dim)
     # optimizer = optim.SGD(model.parameters(),lr=1e-3, weight_decay=args.weight_decay, momentum=0.9)
     Classifier = QuestionClassifier(input_dim=input_dim, hidden_dim=hidden_dim2, output_dim=n_classes)
-    # Classifier.to(device)
     optimizer = optim.Adam([{'params': model.parameters()},
                             {'params': Classifier.parameters()}], lr=learning_rate,weight_decay=0.001)
-    print(model.embeddings.weight)
-    # Classifier.to(device)
+
     Trainer = ClassifierTrainer(model=model, classifier=Classifier, train_loader=trainset_loader,
                                 dev_loader=devset_loader, test_loader=0,
                                 optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name,
