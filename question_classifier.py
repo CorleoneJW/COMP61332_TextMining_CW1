@@ -22,8 +22,7 @@ parser.add_argument('--test', action='store_true', help='Testing mode - needs a 
     All test is done with seed(1)
     
 '''
-torch.manual_seed(1)
-random.seed(1)
+
 
 
 '''
@@ -206,7 +205,7 @@ def create_word_embedding(vocabs, embedding_mode,embedding_size,glove_path):
         embeddings_weight = embeddings.weight
         embeddings_weight.requires_grad = False
         unk_embedding = torch.randn(1, embedding_size)
-        embeddings_weight
+
         embeddings_weight[1] = unk_embedding
     #   pretrained-part
     elif embedding_mode == 'pretrained':
@@ -589,6 +588,7 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.sections()
     config.read(args.config)
+    random_seed = int(config['hyperparameters']['random_seed'])
     train_path = config['data_path']["train_path"]
     glove_path = config['data_path']["glove_path"]
     test_path = config['data_path']["test_path"]
@@ -610,33 +610,13 @@ if __name__ == '__main__':
     output_path = config['data_path']['output_path']
 
     ''''''
-    #k = 5
-    #train_path = './data/train_5500.label.txt'
-    #test_path = './data/TREC_10.label.txt'
-    #glove_path = './data/glove.small.txt'
+    torch.manual_seed(random_seed)
+    random.seed(random_seed)
 
     stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', '$1', '$5', '&', "'", "''",
                 "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
-    #stop_words = [    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
-    #                , '!', '.', '$1', '$5', '&', "'", "''",
-    #            "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
-    #    , "'t", "'ve", ",", '-', '?', ':', '``', '`']
-    #model_name = 'bilstm'  # 'bow'
-    #label_mode = 'fine'  # 'coarse'
-    #embedding_mode = 'pretrained'  # 'pretrained'
-    #freeze_pretrained = False # True
-    #embedding_dim = 300
-    #max_len = 32
-    #split_coef = 0.9
-    #batch_size = 300
-    #learning_rate = 0.007
-    #hidden_dim = 300
-    #input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
-    #hidden_dim2 = 800
-    #n_classes = 6 if label_mode == 'coarse' else 50
-    #n_epoch = 10
-    ''''''
+
 
     train_sentences, train_labels_F, train_labels_C = load_data(train_path)
     test_sentences, test_labels_F, test_labels_C = load_data(test_path)
