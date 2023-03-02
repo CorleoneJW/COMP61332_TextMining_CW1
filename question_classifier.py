@@ -509,6 +509,35 @@ class ClassifierTrainer(object):
             print(f1)
             print(cm)
         self.model.train()
+        
+        
+    def test(self):
+        self.classifier.eval()
+        with torch.no_grad():
+            temp_label = []
+            temp_pred = []
+            temp_acc = 0
+            temp_result = 0
+            for inputs, labels in self.test_loader:
+                sentence_repr = self.model(inputs)
+                outputs = self.classifier(sentence_repr)
+                loss = self.loss_fn(outputs, labels)
+                _, pred = torch.max(outputs.data, 1)
+                for i in labels:
+                    temp_label.append(i.item())
+                for j in  pred:
+                    temp_pred.append(j.item())
+                results = pred == labels
+                correct_points = torch.sum(results.long())
+                temp_acc += correct_points.float()
+                temp_result += results.size()[0]
+            acc = (temp_acc / temp_result * 100).item()
+            print('acc-dev: ', acc)
+            f1 = f1_score(temp_label, temp_pred,average='macro') * 100
+            cm = confusion_matrix(temp_label, temp_pred)
+            #print(model.embeddings.weight)
+            print(f1)
+            print(cm)
 
 
 if __name__ == '__main__':
@@ -532,7 +561,7 @@ if __name__ == '__main__':
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
     model_name = 'bilstm'  # 'bow'
     label_mode = 'fine'  # 'coarse'
-    embedding_mode = 'pretrained'  # 'pretrained'
+    embedding_mode = 'random'  # 'pretrained'
     freeze_pretrained = False  # True
     embedding_dim = 300
     max_len = 32
@@ -546,7 +575,7 @@ if __name__ == '__main__':
     ''''''
 
     train_sentences, train_labels_F, train_labels_C = load_data(train_path)
-
+    test_sentences, test_labels_F, test_labels_C = load_data(train_path)
     data = list(zip(train_sentences, train_labels_F,train_labels_C))
     #random.shuffle(data)
     split_index = int(len(train_sentences) * split_coef)
@@ -560,15 +589,21 @@ if __name__ == '__main__':
                                                     )
     print(dict_vocabs)
 
-    train_input,train_label = data_preprocess(sentence=train_data,label_c=train_labels_c,label_f=train_labels_f,max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs)
+    train_input,train_label = data_preprocess(sentence=train_data,label_c=train_labels_c,label_f=train_labels_f,
+                                              max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs)
     dev_input, dev_label = data_preprocess(sentence=dev_data, label_c=dev_labels_c, label_f=dev_labels_f,
                                                max_len=max_len, label_mode=label_mode,dict_vocabs=dict_vocabs)
-
+    test_input, test_label = data_preprocess(sentence=test_sentences, label_c=test_labels_C, label_f=test_labels_F,
+                                           max_len=max_len, label_mode=label_mode, dict_vocabs=dict_vocabs)
+    
     train_dataset = QuestionDataset(train_input, train_label)
     trainset_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     dev_dataset = QuestionDataset(dev_input, dev_label)
     devset_loader = torch.utils.data.DataLoader(dev_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-
+    test_dataset = QuestionDataset(test_input, dev_label)
+    testset_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+    
+    
     model = produce_model(embeddings, model_name=model_name, freeze_pretrained=freeze_pretrained,
                           embedding_size=embedding_dim, hidden_dim=hidden_dim)
     # optimizer = optim.SGD(model.parameters(),lr=1e-3, weight_decay=args.weight_decay, momentum=0.9)
@@ -577,7 +612,7 @@ if __name__ == '__main__':
                             {'params': Classifier.parameters()}], lr=learning_rate,weight_decay=0.001)
 
     Trainer = ClassifierTrainer(model=model, classifier=Classifier, train_loader=trainset_loader,
-                                dev_loader=devset_loader, test_loader=0,
+                                dev_loader=devset_loader, test_loader=testset_loader,
                                 optimizer=optimizer, loss_fn=nn.CrossEntropyLoss(), model_name=model_name,
                                 embedding_mode=embedding_mode
                                 , label_mode=label_mode, freeze_embedding=freeze_pretrained)
