@@ -8,6 +8,21 @@ from sklearn.metrics import f1_score
 import re
 from sklearn.metrics import confusion_matrix
 import numpy as np
+import configparser
+
+
+
+config = configparser.ConfigParser()
+config.sections()
+#config.read("config.ini")
+#print(config.keys())
+#path_train = config["PATH"]["path_train"]
+#path_dev = config["PATH"]["path_dev"]
+#path_test = config["PATH"]["path_test"]
+
+
+
+
 
 #np.set_printoptions(edgeitems=25)
 parser = argparse.ArgumentParser()
@@ -205,6 +220,10 @@ def create_word_embedding(vocabs, embedding_mode,embedding_size,glove_path):
     if embedding_mode == 'random':
         dict_emb,embeddings = create_from_random(vocabs, embedding_size)
         embeddings_weight = embeddings.weight
+        embeddings_weight.requires_grad = False
+        unk_embedding = torch.randn(1, embedding_size)
+        embeddings_weight
+        embeddings_weight[1] = unk_embedding
     #   pretrained-part
     elif embedding_mode == 'pretrained':
         dict_emb,embeddings = create_from_pretrained(glove_path, vocabs, embedding_size=embedding_size)
@@ -268,21 +287,16 @@ def produce_model(embeddings_weight,model_name,freeze_pretrained,embedding_size,
         return BILSTM
 
 
-def find_sentence_length(sentences):
-    #   A support func to find the length of each sentence.
-    #   Record word != (0 or 1),(it has been encoded)
-    #   To handle x/0 question, add a minimum num 1 at least to avoid NaN in softmax.
-    #   Not best, but a attempt
-    temp_sentence_len = []
-    for sentence in sentences:
-        word_ind = 0
-        for word in sentence:
-            if word.item() != 0 and word.item() != 1:
-                word_ind += 1
-        if word_ind == 0:
-            word_ind = 1
-        temp_sentence_len.append(word_ind)
-    return temp_sentence_len
+def find_sum_sentence(sentences):
+    temp_sentence_emb = []
+    sum_tensor = torch.zeros(size = (sentences.size()))
+    #print(sum_tensor.size())
+    for i in range(sentences.size()[0]):
+        for j in range(sentences.size()[1]):
+            if sentences[i][j].item() == 1:
+                sentences[i][j] = torch.zeros((1,1))
+    return sentences
+
 
 
 class BagOfWords(nn.Module):
@@ -291,30 +305,38 @@ class BagOfWords(nn.Module):
         self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding,freeze=freeze_pretrained,padding_idx=0)
 
     def forward(self, x):
+        temp = torch.zeros(size=(x.size()[0],self.embeddings.weight.size()[1]))
+        x = find_sum_sentence(x)
+
         #   y for non-zero, means length including #unk#, also actual length.
         #   z for non-zero, non-one, means length excluding #unk#.
         #       z has risk of 0, so add a minimum 1.
+
         y = torch.count_nonzero(x, dim=1)
-        z = find_sentence_length(x)
-        embedded = self.embeddings(x)  # [ batch size, max sentence length, embedding dim ]
-        #prefix = 1/ torch.Tensor(z).reshape(x.size()[0],1) # [ batch size, 1]
-        prefix = 1 / y.reshape(x.size()[0], 1)
-        temp_sum = torch.sum(embedded, dim=1)  # [ batch size, embedding dim ]
-        output = prefix * temp_sum
-        return output # [ batch size, embedding dim ]
+        embedded = self.embeddings(x)# [ batch size, max sentence length, embedding dim ]
+        prefix = y.reshape(x.size()[0], 1)
+        #output = torch.sum(embedded, dim=1)/prefix # [ batch size, embedding dim ]
+        temp_sum = torch.sum(embedded, dim=1)
+        for i in range(prefix.size()[0]):
+            if prefix[i].item() == 0:
+                pass
+            else:
+                temp[i] = temp_sum[i]/prefix[i]
+        #output = prefix * temp_sum
+        return temp # [ batch size, embedding dim ]
 
 
 class BiLSTM(nn.Module):
     def __init__(self, embedding_dim, hidden_dim, pretrained_embedding,freeze_pretrained):
         super(BiLSTM, self).__init__()
         self.hidden_dim = hidden_dim
-        self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding,freeze=freeze_pretrained)
+        self.embeddings = nn.Embedding.from_pretrained(pretrained_embedding,freeze=freeze_pretrained,padding_idx=0)
         # batch_first to match the input format
         self.lstm = nn.LSTM(embedding_dim, hidden_dim, bidirectional=True,batch_first=True)
 
     def forward(self, sentence):
         embeds = self.embeddings(sentence) # [ batch size, max sentence length, embedding dim ]
-        _, (h_n,_) = self.lstm(embeds) # considering using last hidden state, [ batch size, 2 , hidden dim *2]
+        lstm_out, (h_n,_) = self.lstm(embeds) # considering using last hidden state, [ batch size, 2 , hidden dim *2]
         final_hidden_state = torch.cat((h_n[0, :, :], h_n[1, :, :]), dim=1) # [ batch size,  hidden dim *2]
         return final_hidden_state
 
@@ -381,15 +403,10 @@ def label_preprocess(labels,dict_labels):
     labels_set = set(labels)
     list1 = list(labels_set)
     list1.sort()
-    #dict_labels ={}
-    #ind = 0
-    #for i in list1:
-    #    dict_labels[i] = ind
-    #    ind += 1
     new_list = []
     for i in labels:
         new_list.append(dict_labels[i])
-    #print(dict_labels)
+
     return new_list
 
 
@@ -435,17 +452,20 @@ class QuestionClassifier(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim):
         super(QuestionClassifier, self).__init__()
         self.fc1 = nn.Linear(input_dim, output_dim)
-        self.bn1 = nn.BatchNorm1d(output_dim)
+        self.bn1 = nn.BatchNorm1d(input_dim)
         self.dropout1 = nn.Dropout(0.3)
         self.fc2 = nn.Linear(hidden_dim, output_dim)
         #self.fc3 = nn.Linear(hidden_dim, output_dim)
-        self.softmax = nn.Softmax(dim=1)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
-        x = self.fc1(x)
-        x = self.bn1(x)
         x = self.dropout1(x)
+        x = self.bn1(x)
+        #x = self.dropout1(x)
+        x = self.fc1(x)
+        #x = self.fc2(x)
         x = self.softmax(x)
+
         return x
 
 
@@ -523,7 +543,8 @@ class ClassifierTrainer(object):
             #print(model.embeddings.weight)
             print(f1)
             print(cm)
-        self.model.train()
+            #print(model.embeddings.weight)
+        #self.model.train()
 
 
     def test(self):
@@ -556,6 +577,8 @@ class ClassifierTrainer(object):
 
 
 if __name__ == '__main__':
+
+
     torch.set_printoptions(precision=None, threshold=None, edgeitems=None, linewidth=None, profile=None)
     #args = parser.parse_args()
     #if args.train:
@@ -564,24 +587,28 @@ if __name__ == '__main__':
     #elif args.test:
         # call test function
         #test(args.config)
-
     ''''''
     k = 5
     train_path = './data/train_5500.label.txt'
     test_path = './data/TREC_10.label.txt'
     glove_path = './data/glove.small.txt'
+
     stop_words = ['a', 'and', 'but', 'not', 'up', '!', '.', 'what', 'why', 'how', '$1', '$5', '&', "'", "''",
-                       "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
+                "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
         , "'t", "'ve", ",", '-', '?', ':', '``', '`']
+    #stop_words = [    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
+    #                , '!', '.', '$1', '$5', '&', "'", "''",
+    #            "'clock", "'em", "'hara", "'l", "'ll", "'n", "'re", "'s"
+    #    , "'t", "'ve", ",", '-', '?', ':', '``', '`']
     model_name = 'bilstm'  # 'bow'
     label_mode = 'fine'  # 'coarse'
     embedding_mode = 'pretrained'  # 'pretrained'
-    freeze_pretrained = False  # True
+    freeze_pretrained = False # True
     embedding_dim = 300
     max_len = 32
     split_coef = 0.9
-    batch_size = 100
-    learning_rate = 0.007
+    batch_size = 400
+    learning_rate = 0.005
     hidden_dim = 300
     input_dim = 2 * hidden_dim if model_name == 'bilstm' else embedding_dim
     hidden_dim2 = 800
@@ -595,7 +622,7 @@ if __name__ == '__main__':
     dict_labels_F = create_label_dict(train_labels_F)
     dict_labels_C = create_label_dict(train_labels_C)
 
-    #random.shuffle(data)
+    random.shuffle(data)
     split_index = int(len(train_sentences) * split_coef)
     train_data, train_labels_f,train_labels_c = zip(*data[:split_index])
     dev_data, dev_labels_f,dev_labels_c = zip(*data[split_index:])
@@ -606,6 +633,7 @@ if __name__ == '__main__':
                                                     embedding_size=embedding_dim,glove_path=glove_path
                                                     )
     print(dict_vocabs)
+    print(embeddings)
 
     train_input,train_label = data_preprocess(sentence=train_data,label_c=train_labels_c,label_f=train_labels_f,
                                               max_len=max_len,label_mode=label_mode,dict_vocabs=dict_vocabs,
