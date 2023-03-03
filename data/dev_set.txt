@@ -1,0 +1,546 @@
+ENTY:animal what animals can live the longest without food 
+DESC:desc what happened to pepsi clear 
+ENTY:veh what ill-fated craft was captained by ernst lehmann 
+DESC:def what is cabarnet sauvignon 
+NUM:period how long do you have to pay back debt after claiming chapter 11 bankruptcy 
+DESC:manner how can people from ireland come to the u.s. , work , and then return to ireland 
+ENTY:animal what kind of animal is babar 
+ENTY:other what kind of education would you need to become an athletic trainer for the nfl 
+HUM:ind what director made one silent and one sound version of the ten commandments 
+DESC:desc what is the origin of the term `` blue moon , '' and how often do they occur 
+LOC:other where can i get u.s. economic statistics 
+ENTY:substance what is the only substance that gives food its `` taste '' when eaten 
+HUM:ind which of these are authors 
+NUM:speed how fast must a spacecraft travel to escape earth 's gravity 
+ABBR:abb what is the abbreviation of the international olympic committee 
+DESC:manner how do i know if i 'm jealous of someone 
+NUM:perc what is the probability that at least 2 out of 25 people will have the same birthday 
+ENTY:cremat what 2 statues did france give to other countries 
+NUM:date when are the oscars academy awards in 1999 
+LOC:other where did woodstock take place 
+NUM:money how much does the president get paid 
+LOC:other what natural attractions draw the most visitors in the united states 
+NUM:count what 's the american dollar equivalent for 8 pounds in the u.k. 
+ENTY:dismed what is a fear of drinking 
+ENTY:cremat which is the most-used computer program 
+LOC:country what country boasts the southernmost point in continental europe 
+ENTY:animal what kind of dog is scooby doo 
+HUM:gr what 's the name of pittsburgh 's baseball team 
+NUM:count how many rows of sprocket holes does a roll of 35-millimeter film have 
+HUM:ind who gave abbie hoffman his first dose of lsd 
+LOC:other where do quality drinks begin 
+ENTY:dismed what is a fear of being alone 
+ENTY:product what product does `` mrs. olsen '' promote 
+HUM:ind what french designer declared : `` the jean is the destructor ! it is a dictator ! it is destroying creativity. the jean must be stopped ! '' 
+DESC:reason why is it called `` hamburger '' if there is no ham in it 
+LOC:country what country does ileana cotrubas come from 
+DESC:desc what is the difference between a bottle and a jar 
+DESC:manner how do you find out what is allowed to claim as a contibution for income tax purposes 
+LOC:other where did he get the title 
+DESC:manner how do wasps make their nests 
+NUM:dist how long is the world 's largest ship , in meters 
+HUM:ind who wrote : `` poems are made by fools like me but only god can make a tree '' 
+LOC:other where did bocci originate 
+ENTY:product what kind of suit did true hepcats wear in 1942 
+ENTY:termeq what are `` darning needles '' and `` horse stingers '' better known as 
+HUM:ind who found hawaii 
+ENTY:substance what is the main ingredient of yogurt 
+NUM:date what year was the avery dennison company founded 
+ABBR:exp what does ibm stand for 
+DESC:def what does `` extended definition '' mean and how would one write a paper on it 
+DESC:desc what is the origin of u.s. army sergeant 's stripes 
+DESC:desc what is the origin of the word ozymandias 
+NUM:count how many layers of yellow paint is a faber mongol pencil lucky enough to be sprayed with 
+DESC:desc what was the proper laugh-in respones to : `` say goodnight , dick '' 
+NUM:count how many cities are there in utah 
+LOC:other what famed wall supports the badaling turret 
+DESC:reason what causes rust 
+DESC:def what does palindromic mean 
+DESC:manner how do you find the area of a circle 
+ENTY:color what color is an arctic fox in winter 
+ENTY:cremat what british tv series featured emma peel 
+LOC:country what country are you visiting if you land at president duvalier airport 
+HUM:ind which is the only dick tracy villain to appear three times 
+HUM:desc who was maria theresa 
+NUM:money what is the average cost for four years of medical school 
+ENTY:animal what was the name of betty boop 's dog 
+ENTY:body what part of your body contains the corpus callosum 
+LOC:country what european country abandoned postage stamps in 1923 because printing them cost more than their face value 
+HUM:ind what two historical figures , who fought each other in a famous battle , each have a food named after them 
+DESC:manner how do i start a web based business 
+DESC:reason why is microsoft 's windows 3 such a successful computer program 
+DESC:def what does storm wave mean in japanese 
+NUM:date when was the first stained glass window made 
+ENTY:other what can communications satellites offer yachts 
+DESC:manner how do you stop junk snail mail 
+NUM:date in which year was new zealand excluded from the anzus alliance 
+HUM:ind what was thatcher 's first name 
+HUM:ind who became president of the u.s. in 1789 
+ENTY:cremat what tv station did mary richards work for 
+HUM:ind what british female pop singing star of the 1960s and early 1970s was a child actress in the 1940s and '50s 
+LOC:country what is the name of the country which hitler ruled 
+DESC:reason why does it say on children 's cough syrup not to drive while using this medication 
+HUM:gr what manufacturers are there in texas 
+HUM:ind who appointed the chair of the federal reserve 
+LOC:city what city is logan airport in 
+ENTY:techmeth what is the formula to calculate pi 
+ENTY:dismed what is a fear of pregnancy 
+ENTY:other what 's the most powerful card in euchre 
+LOC:mount what is the world 's highest peak 
+NUM:money how much will gas be taxed in california by the year 2000 
+DESC:def what is barnstorming 
+DESC:desc what is the root of all evil 
+DESC:def what is a ` borrow pit ' 
+HUM:ind who portrayed `` the man without a face '' in the movie of the same name 
+LOC:other what botanical marvel did nebuchadnezzar build 
+ENTY:other what device provided a new way to listen to music in 1963 
+NUM:date when did mount st. helen last have a significant eruption 
+HUM:ind who is the most sexy celebrity 
+DESC:desc what happened to moon maiden 
+LOC:city in what city is the us declaration of independence located 
+NUM:money how much did the minimum wage amount to in 1991 
+DESC:def what is the literal meaning of `` d-day '' 
+ENTY:cremat what film did louise fletcher win the best actress oscar for 
+LOC:other what california bay 's largest island is angel island 
+HUM:ind who was the author of `` john brown 's body '' 
+DESC:reason why is jane goodall famous 
+NUM:count how many films are made by the major studios in a year 
+NUM:other what is the death toll of people dying from tuberculosis 
+DESC:manner how is the new ford econoline van f25 v1 engine 
+DESC:manner how do i e-mail someone at aol.com from yahoo.com 
+LOC:state what state full of milk and honey was the destination in the grapes of wrath 
+ABBR:exp what is ram in the computer 
+ENTY:color what two colors are you blind to if you suffer from protanopia 
+ENTY:food what spice do chefs pay the most for 
+LOC:country what country is the largest diamond producer 
+NUM:count how many feet more than 2 is the average height of the great wall of china 
+LOC:other where was the first restaurant 
+LOC:country what country boasts ismail 's palace and the palace of king farouk 
+HUM:ind what 's the name of tom sawyer 's aunt with whom he lives 
+NUM:count what is the estimated total u.s. whitetail deer population 
+DESC:manner how did names come about 
+NUM:count how many species of the great white shark are there 
+NUM:date when did the art of quilting begin 
+DESC:def what is color 
+LOC:other what is the web address of the list of e-mail addresses of members of the house of representatives 
+DESC:def what is nuclear proliferation 
+NUM:period how old was george washington when he died 
+LOC:country what was the only country you were allowed to drive into israel from in 1979 
+DESC:reason why is the word `` abbreviation '' so long 
+NUM:count how much caffeine is in a 16 oz cup of coffee 
+HUM:ind who is the mayor of marbella 
+NUM:money what is the current ticket fare from from cairo to barbados 
+ENTY:other what determines the value of the pearl 
+HUM:ind who delivered his last newscast on march 6 , 1981 
+LOC:other where are zebras most likely found 
+NUM:money how much did lucy van pelt originally charge for psychiatric sessions 
+NUM:date when was the first successful heart transplant for a human 
+NUM:count how many innings constitute an official baseball game 
+ENTY:product what soap was touted as being `` for people who like people '' 
+ENTY:cremat what oldtime kids ' fare did tv guide writer jeff greenfield call `` one of the most...subversive tv shows in american history '' 
+DESC:def what are the alveoli 
+HUM:ind which of the following people is not associated with andy warhol 
+HUM:ind what six-foot temperance advocate wielded her hatchet on saloons 
+NUM:period how long do cardinal eggs incubate 
+LOC:country what country 's capital is lagos 
+ENTY:other what was the name of the peace agreement imposed on germany after world war i 
+HUM:ind what part did john peter zenger play in the deveopment of the newspaper in america 
+DESC:desc what is the difference between college and graduate school 
+HUM:ind what u.s. general died december 1 , 1945 , when his jeep collided with a truck 
+DESC:manner how does one correctly pronounce ` qigong ' 
+HUM:ind who is the premier of china 
+NUM:date what year did montana become a state 
+NUM:money what does an average daycare provider get paid in new england 
+LOC:other what river runs through liverpool 
+DESC:def what is a virtual ip address 
+ENTY:termeq what is the name for clouds that produce rain 
+HUM:ind who is the worst us president ever 
+ENTY:cremat what tv series saw many of its aquatic scenes shot at silver springs , florida 
+ENTY:other what developed a crack in 1835 while tolling the death of u.s. chief justice john marshall 
+NUM:count how many people died because of a smoking problem in 1997 
+LOC:city what south american capital is the world 's highest 
+LOC:country what nationality was jackson pollock 
+DESC:manner how effective are condoms in protecting against aids 
+ENTY:animal name the two mystical ravens odin has at his command 
+ENTY:other what is the one thing you need before you can purchase life insurance 
+NUM:perc what percentage of american men are alcoholic 
+ENTY:cremat what broadway show introduced the song some enchanted evening 
+LOC:city what is the capital of california 
+HUM:ind what two presidents of the u.s. published books of poetry 
+LOC:other what tokyo street glitters with famed department stores and nightclubs 
+NUM:count how many times larger than life size is the statue of liberty 
+LOC:other where are the leading medical groups specializing in lung diseases 
+DESC:def what is a bone marrow transplant meant for 
+LOC:city what north american city sprouts the most parking meters 
+ENTY:food what is the recipe for eggs benedict 
+HUM:ind whose first presidential order was : `` let 's get this goddamn thing airborne '' 
+DESC:desc what do i need to do to take my dog with me to live in dominica , west indies for a year 
+HUM:ind who created the world wide web , www 
+DESC:reason why do we ask for the `` check '' and not the bill at a restaurant 
+DESC:desc what steps can be taken to prevent diabetes 
+NUM:volsize how big is a baby bald eagle 
+LOC:city what city did the mormons establish as their headquarters in 1847 
+ENTY:veh what ship did lloyd m. bucher command 
+HUM:gr which police department made the all-time biggest cocaine bust in ventura county 
+LOC:country what country did king wenceslas rule 
+DESC:desc what is the daily requirement of folic acid for an expectant mother 
+DESC:manner how is silk screening done 
+NUM:count how many people live in chile 
+ENTY:other what overalls are named for dungri , a suburb of bombay 
+NUM:count how many months does a normal human pregnancy last 
+NUM:period how long does it take for your blood to make one complete trip through the body 
+DESC:def what is `` cat scratch fever '' 
+LOC:other what is the us federal government website for standard industrial classification codes , sic , 
+ENTY:food what 's the traditional drink at the kentucky derby 
+LOC:state what are all the southern states of the united states 
+ENTY:food what is 55 times sweeter than cane sugar 
+HUM:gr what company sells the most greeting cards 
+DESC:def what is a leper 
+DESC:desc what is the origin of the expression `` tout de suite '' 
+ENTY:cremat what magazine gives us the cream , not the skim 
+ENTY:other what is damage to business and government caused by bureaucracy 
+DESC:desc what do a diamond and lump of coal have in common 
+LOC:other where is erykah badu originally from 
+ENTY:sport what card game has variations called canfield , klondike and spider 
+HUM:ind who developed the first polio vaccine 
+NUM:dist how deep is a fathom 
+LOC:country what country saw the origin of the asian flu 
+NUM:count how many electoral votes does it take to win presidency 
+ENTY:other what does a philatelist collect 
+LOC:other where can i find a `` fifth element '' screensaver 
+LOC:country what country has the best defensive position in the board game diplomacy 
+DESC:desc what is the main application of sodium hydrosulfite 
+LOC:other where is the danube 
+NUM:count how many were in attendance at the last supper 
+DESC:manner how do you use an intranet 
+DESC:desc what is the origin of the word `` attic '' 
+HUM:gr what u.s. university boasts the largest library 
+ENTY:cremat what tv game show once saw a contestant admit to picking his toes in the shower 
+HUM:ind name the various costumed personas of dr. henry pym 
+LOC:state in which state are the mark twain national forests 
+NUM:money what was joe namath 's first contract worth 
+LOC:country what country did the nile river originate in 
+ENTY:food what is the only vegetable that starts with `` z '' 
+DESC:def what does melissa mean 
+ENTY:cremat what tale has the moral : `` he who wants everything gets nothing '' 
+NUM:period how long did shea and gould practice law in los angeles 
+DESC:def what is a jake brake 
+NUM:speed how fast does the fastest car go 
+NUM:count how many freckles does howdy doody have on his face 
+HUM:gr what culture developed the idea of potlatch 
+LOC:other what 's the most common street name in america 
+DESC:desc what is the weather like on the moon 
+LOC:city what russian city boasts the hermitage museum 
+ENTY:other what shape-shifting menace did rom come to earth to fight 
+ENTY:cremat what daily newspaper will `` help you see clearer across the usa '' 
+HUM:gr what was the name of the confederate mounted guerrilla group with which jesse james and coleman younger had ridden 
+DESC:desc what excuse did the nato people give for hitting the chinese embassy 
+ENTY:product what garment was named for bradley , voorhees and day 
+HUM:title what is nicholas cage 's occupation 
+HUM:ind who is karenna gore , al gore 's oldest daughter , married to 
+LOC:other where is the bulls basketball team based 
+LOC:other in what city or state do the most gay men live in 
+HUM:gr what are the top ten all-time money making nfl teams 
+DESC:manner how did the tradition of best man start 
+LOC:state mississippi has what name for a state nickname 
+ABBR:exp what does the word laser mean 
+ENTY:product what was the name of the computer in ` 2001 : a space odyssey ' 
+HUM:ind who led the normans to victory in the battle of hastings 
+DESC:desc what is the difference between microprocessors & microcontrollers 
+HUM:ind who released the internet worm in the late 1980s 
+ENTY:product what product 's ads claim that it `` eliminates odors , kills household germs , mold , and mildew '' 
+HUM:gr the major league baseball team in pittsburgh is called what 
+HUM:gr what cigarette company urged us , `` come to where the flavor is ? 
+DESC:def what was archy , and mehitabel 
+DESC:manner how does a hurricane form 
+NUM:count how many fig newtons are there to the pound 
+ENTY:product what product `` doubles your pleasure , doubles your fun '' 
+LOC:city what city is graced by the arch of titus 
+LOC:other where is the official `` zero '' of the sea level 
+ENTY:veh what was the name of the u.s. navy gunboat in the film the sand pebbles 
+LOC:other what park contains firehole river and fairy falls 
+ENTY:product what brand of white rum is still made in cuba 
+NUM:period how long was the longest hiccup attack 
+HUM:ind who did sara jane moore try to assassinate 
+DESC:def what are bellworts 
+NUM:count what was the u.s. highway death toll in 1969 
+ENTY:other what generation am i in 
+DESC:desc what did richard feynman say upon hearing he would receive the nobel prize in physics 
+DESC:manner how does a rainbow form 
+ENTY:product what product on the market is good for hiding facial scars 
+DESC:desc what is the secret of the universe 
+HUM:ind what scottish poet penned to a mouse and to a louse 
+NUM:money how much do drugs to treat tuberculosis cost 
+ENTY:dismed what is a fear of machinery 
+NUM:date when did french revolutionaries storm the bastille 
+NUM:count how many different kinds of ice cream are there 
+DESC:def what is false consciousness 
+HUM:gr what college produced the most winning super bowl quarterbacks 
+NUM:count what was the number of assassinations and attempts to assassinate in the u.s. since 1865 
+ENTY:other what kind of weapons were used in medieval warfare 
+DESC:reason why did the shea & gould law firm leave los angeles 
+HUM:ind what cigar-chewing comedian observed : `` you 're only as old as the woman you feel '' 
+NUM:count how many stars are there on the soviet union 's flag 
+LOC:city what capital is built around monument circle which contains soldiers and sailors monument 
+ENTY:cremat what newspaper serves salt lake city 
+HUM:ind silly putty was invented by whom 
+DESC:reason why was the zipper invented 
+HUM:gr who produces spumante 
+NUM:date what day of the week was july 13 
+NUM:date in what year was the berlin wall erected 
+LOC:country which country is the largest country in latin america 
+NUM:count how many people have been captain america 
+LOC:other where is the orinoco 
+HUM:ind who was darth vader 's son 
+NUM:volsize how big is the electoral college 
+ENTY:cremat name a salt lake city newspaper 
+DESC:def what is boston kreme 
+DESC:def what does the name `` anthony '' mean 
+LOC:other where are the u.s. headquarters for procter & gamble 
+HUM:ind what nazi leader killed himself in jail just before he was to be executed as a war criminal 
+HUM:gr what name did football 's new york titans adopt in 1963 
+DESC:desc what was the importance of magellan 
+NUM:count how many people died on south carolina highways in 1998 
+NUM:money how much money was the minimum wage in 1991 
+ENTY:dismed what infectious disease is the world 's deadliest 
+HUM:ind who was the only president to serve two nonconsecutive terms 
+DESC:def what is saltpeter 
+LOC:other which one of the great lakes is entirely within u.s. territory 
+HUM:gr who has won the most super bowls 
+NUM:count how many queen bees reign in a hive 
+DESC:def what are faults in the earth 's crust 
+HUM:ind what president 's favorite biblical quotation was : `` come now , and let us reason together '' 
+DESC:manner how does food color affect how you think it will taste 
+DESC:desc what would happen to canada if quebec separated 
+HUM:ind who is considered the first lady of the american stage 
+HUM:ind what radio , tv and movie character did jackie gleason and william bendix play 
+LOC:other what stadium do the miami dolphins play their home games in 
+ENTY:cremat what movie did steven spielberg direct in 1975 
+DESC:reason what are cushman and wakefield known for 
+DESC:def what is a hyperlink 
+ABBR:abb what is the abbreviated form of the national bureau of investigation 
+HUM:ind what woman was time 's man of the year for 1952 
+NUM:date what year was the setting for american graffiti 
+HUM:ind what comedienne upstaged dwight d. eisenhower 's first inauguration by giving birth to her first child 
+HUM:gr what company markets a shampoo `` for brunettes only '' 
+DESC:def what is a multiplexer 
+DESC:reason why did several san diego schools stop serving apples to students 
+ENTY:food name the soft drink that is `` number one in the sun . 
+DESC:desc what 's new in the postal world in 1999 
+ENTY:cremat what cbs soap opera was interrupted by the bulletin of john f. kennedy 's assassination 
+LOC:state in what state was there an 11 million gallon oil spill 
+ENTY:veh what are the names of all the u.s. navy aircraft carriers 
+DESC:reason why are organ transplants more successful today 
+DESC:reason what caused the lynmouth floods 
+ENTY:other what is the greatest source of `` white '' magic in the marvel universe 
+DESC:def what does the word `` opera '' mean 
+DESC:def what is the definition of `` chancery '' file in real estate 
+DESC:def what is an angelus 
+LOC:other what building built in 18 contains 327 miles of book shelves 
+HUM:ind what diminutive american female gymnast stole the show at the 1984 olympics 
+NUM:date when was china 's first nuclear test 
+LOC:city what asian city boasts the world 's biggest bowling alley 
+ENTY:cremat what late-night tv show features larry , bud , melman and toast on a stick 
+HUM:ind what woman pitcher has struck out ted williams and hank aaron 
+LOC:other where in the americas is it only 47 miles from the atlantic to the pacific 
+HUM:ind what was the nickname of frederick i , holy roman emperor and king of germany 
+HUM:ind who was chief engineer of the starship enterprise 
+DESC:manner how do you select wine 
+HUM:ind who wrote the lyrics to porgy and bess 
+LOC:city what city does mccarren airport serve 
+ENTY:substance what are the most common elements in seawater 
+DESC:manner how do i find the balance of my social security account 
+ENTY:substance what explosive do you get by mixing charcoal , sulfur and saltpeter 
+NUM:count how many people are taller than 7 feet 
+DESC:manner how you can raise your iq 
+HUM:ind who was the first woman to fly solo across the atlantic 
+LOC:other where are the 49 steps 
+HUM:gr what university fired angela davis 
+HUM:ind who wrote the song , `` silent night '' 
+DESC:reason why did the anglican church split from the vatican 
+LOC:other what ocean did the titanic sink in 
+HUM:gr what court does bob woodward describe in the brethren 
+HUM:ind who banned peter rose from baseball for betting on games 
+DESC:manner how can you get rust stains out of clothing 
+NUM:period what is the life span of the average monkey 
+NUM:count how many meters are in a mile 
+DESC:manner how is cologne made 
+NUM:period how long does cocaine stay in your system 
+NUM:date when did nostradamus believe world war iii would begin 
+LOC:city what city is sometimes called gotham 
+ENTY:substance what are the chemicals used in glowsticks 
+LOC:country what country lies directly south of detroit 
+ENTY:other what 's bottled in jeroboams 
+HUM:ind who 's played the most games for the new york yankees 
+ENTY:dismed what is a fear of food 
+DESC:reason why do the chickenpoxs last so long 
+DESC:def what are `` inkhorn terms '' 
+HUM:ind who served as inspiration for the schoolteacher portrayed by robin williams in `` dead poets society '' 
+DESC:manner how does the nintendo `` zapper '' work 
+ENTY:body which leg does a cat move with its left front leg when walking - its left rear or right rear leg 
+NUM:count what is the goat population of the world 
+HUM:gr what university was woodrow wilson president of 
+LOC:city what city is served by logan international airport 
+LOC:other in what part of africa is mozambique located 
+DESC:desc what is the origin of the christmas tree 
+HUM:ind who was the first taiwanese president 
+LOC:other where did hillary clinton graduate college 
+NUM:date what year did the vietnam war end 
+DESC:desc what is the origin of the city `` corpus christi '' 
+NUM:count how many feet long is a baseball pitcher 's rubber 
+HUM:ind which two inventors invented post-its 
+DESC:def what does the georgetown `` hoya '' mean 
+HUM:ind who won the 1968 california democratic primary 
+HUM:ind what actress has received the most oscar nominations 
+HUM:ind what are the top ten most common girl names in the us 
+HUM:gr what army was founded by william booth and his wife catherine 
+LOC:city what european city do nicois live in 
+NUM:date when was the first barbie produced 
+DESC:reason colin powell is best known for what achievement 
+DESC:def what does the name shawn mean 
+HUM:ind name the first private citizen to fly in space 
+ENTY:sport what card game derived its name from biritch , or russian whist 
+ENTY:plant what plants are found in an estuary 
+DESC:desc what is the origin of the midwest slang , ` you 're darn tootin ' 
+ENTY:color what color is the eight-ball in pocket billiards 
+DESC:manner how does psorisis disappear 
+NUM:money how much does a new railroad coal car cost 
+ENTY:other what do humans catch zoonose diseases from 
+DESC:manner how can i gain access to a spy satelite 
+LOC:other where does the tennis star stefan edberg come from 
+ENTY:cremat what is the name of a book written by aaron hass 
+DESC:def what is dextropropoxyphen napsylate 
+DESC:reason why did europeans first come to australia and oceania 
+NUM:count how many dots make up the symbol for `` because '' 
+HUM:ind who was the pride of the yankees 
+DESC:desc what are differences between 1980 and 1990 
+ENTY:substance what materials did the three little pigs use to build their houses 
+ENTY:product what shampoo prevents eczema , seborrhea , and psoriasis 
+NUM:count how many logarithmic scales are there on a slide rule 
+LOC:country what country has declared one-fifth of its territory off-limits to russians 
+NUM:period how long does it take to travel from tokyo to niigata 
+HUM:ind what honeymooners actress did television magazine name as 1953 's most promising star 
+LOC:city what southern california town is named after a character made famous by edgar rice burroughs 
+LOC:country what country is the biggest producer of tungsten 
+LOC:other what constellation represents a hunter with club and shield 
+NUM:count how many days does a typical mayfly live 
+DESC:reason what makes popcorn pop 
+NUM:weight how many pounds are there in a stone 
+DESC:desc what happened in dogtown in 1899 to make that year remembered 
+HUM:ind name the designer of the shoe that spawned millions of plastic imitations , known as ` jellies ' 
+NUM:count how many calories are there in a glass of water 
+ENTY:cremat in which kevin costner movie did sioux indians play a role 
+HUM:ind who owns the rights on a tv program 
+LOC:other where can an individual get a contact lens tested that burned the entire surface of eye when new 
+ENTY:food what cocktail inspired john doxat to write the book stirred-not shaken 
+ENTY:substance what four elements make up 90 percent of the human body 
+DESC:def what is the golden rule 
+HUM:ind who played for the chicago bears , houston oilers and oakland raiders in a 26-year pro football career 
+LOC:other what are some mythology websites 
+ENTY:other what do goldfish lose if kept in dimly-lit or running water 
+DESC:desc what is the origin of the term soda jerk 
+NUM:count how many cards are dealt to each player in gin rummy 
+NUM:dist what is the world record for the longest hair 
+LOC:country what country 's flag is field green 
+HUM:ind who is the father of the computer 
+ENTY:other what were millions of kids wearing on their heads in 1955 
+NUM:count how many zip codes are there in the u.s. 
+HUM:ind what is the name of the american swimmer who won seven gold medals in the 1972 olympics 
+HUM:ind who invented make-up 
+NUM:period how old is jeremy piven 
+ENTY:cremat what homerian epic chronicles events toward the end of the trojan wars 
+HUM:ind who is the best known villain of the 165 gunpowder plot 
+HUM:ind what actor and world war ii airman had a $5 , 0 bounty put on his head by hermann goering 
+ENTY:termeq what is the name given to the islamic counterpart of the red cross 
+DESC:def what does the theory of quantum leaps mean in simpler terms 
+LOC:other what island was the target of the u.s. 's operation urgent fury 
+DESC:manner how is saline used in medicine 
+ENTY:cremat what is the name of the song that dracula plays on the organ 
+LOC:other what famed strip of land is a 15-minute boat trip across the venetian lagoon from venice 
+NUM:date what year did jack nicklaus join the professional golfers association tour 
+ENTY:product what product did william horlick discover and produce 
+NUM:count how many south american countries have the letter z in their names 
+ENTY:termeq what does playboy title its `` continuing dialog on contemporary issues between playboy and its readers '' 
+NUM:weight what is the recommended weight of a 15 year-old male that is 5 , 6 
+DESC:def what is a caul 
+ENTY:sport what was dwight eisenhower 's favorite card game 
+DESC:reason why are there 12 people on a jury in criminal cases 
+DESC:desc what are the living conditions in cuba 
+NUM:date when did nixon visit china 
+HUM:ind the lawyer who represented randy craft , what was his name 
+DESC:manner how is a hydrogen bomb different from a nuclear bomb 
+DESC:desc what is the distinction of erle stanley gardner 's the case of the terrified typist 
+DESC:def what is sound 
+NUM:count how many calories are there in soy sauce 
+NUM:count how much will the california be in the year 2000 
+ABBR:exp what does the channel espn stand for 
+ENTY:techmeth in what ways did ivan iv support russian expansion 
+DESC:reason what 's the proud claim to fame of the young women who formed kappa alpha theta 
+DESC:desc what happened to pompeii 
+NUM:date when did spielberg direct `` jaws '' 
+LOC:other where can i get a complete listing of showtimes in my area 
+HUM:ind who was hitler 's minister of propaganda 
+DESC:reason colin powell is most famous for what 
+HUM:gr what businesses or agencies would do an employment verification 
+LOC:other what lake in scotland is said to hold one or more monsters 
+LOC:state what u.s. state 's biggest lake is lake sam rayburn 
+LOC:other what former royal palace has served as a granary , prison , arsenal , leper colony , mint , telegraph station and whorehouse before becoming an art museum 
+HUM:gr who were the yankee 's frequent enemies 
+ENTY:cremat what program do i need to run a .tbk file 
+HUM:desc who is zebulon pike 
+DESC:def what is the definition of spamming 
+LOC:other in what county is eckley colorado 
+LOC:other what 's the name of the temple that is located near the capital city of laos 
+DESC:manner how did people respond to the idea of the first millenium 
+DESC:reason why do you say `` god bless you '' when people sneeze 
+LOC:other where is the isle of man 
+ENTY:other what did dan aykroyd and john belushi quit saturday night live to become 
+ENTY:sport what sport can a free-legged pacer compete in 
+ABBR:exp what does the acronym cpr mean 
+HUM:ind who directed the first woody woodpecker cartoon 
+DESC:desc where did indian pudding come from 
+DESC:manner how do you pronounce `` tzimisce '' 
+LOC:country what nationality is ileana cotrubas 
+HUM:ind what is a person called that likes fire 
+ENTY:sport what baseball outcome required nine balls in 1879 , eight balls in 1880 and seven balls in 1881 
+NUM:dist how far can a human eye see 
+HUM:ind who said : `` old soldiers never die ; they just fade away '' 
+ENTY:dismed what is a fear of night or darkness 
+LOC:other where is qatar 
+ENTY:termeq what is the term that describes a word where only one usage has been recorded in all literature 
+LOC:country what three european countries begin with the letter a 
+HUM:ind who was the second person ever to wear iron man 's armor 
+LOC:other where can i find a review of nightmare on elm street in a film journal 
+ENTY:termeq the operating system that runs on ibm-compatible machines is called what 
+DESC:manner how do i write to my congressman 
+ENTY:event the trials resulting from world war ii are known as what 
+DESC:manner how do i make fuel bricks from recycled newspaper 
+LOC:other where is mccarren airport located 
+NUM:date when was the berlin wall erected 
+DESC:reason what makes hamburgers taste like steakburgers 
+HUM:ind what is the name of the managing director of apricot computer 
+NUM:date when was the first steel mill in the united states built 
+LOC:other what is the address for the main government office in rome , italy 
+ENTY:other what is november 's birthstone 
+NUM:count how many thousands of students attend the university of massachusetts 
+DESC:def what is pasta 
+DESC:desc what does choo choo charlie say 
+NUM:count what is the pig population of the world 
+NUM:count how many jews were executed in concentration camps during wwii 
+NUM:period what is the gestation period for human pregnancies 
+ENTY:animal what 's the dumbest domesticated animal 
+DESC:manner how does the elongated man know a mystery is afoot 
+HUM:ind what russian composer 's prelude in c sharp minor brought him fame and fortune 
+NUM:date when was florida admitted into the union 
+HUM:ind what former major-league left-handed baseball pitcher was known as `` space man '' 
+ENTY:color what color is the stripe along each side of a coho salmon 
+LOC:other where are some great educational resources for parents and teachers 
+HUM:ind what 's the middle name of movie producer joseph e. levine 
+ENTY:animal what kind of species is the monster in the film `` jaws '' 
+HUM:ind what non-conformist abstract painter was dubbed jack the dripper by time 
+HUM:desc who is charles lindbergh 
+ENTY:other what types of water pollution are there 
+DESC:reason why do some people have two different color eyes 
+LOC:country what country is the world 's largest importer of cognac 
+DESC:manner how did the months of the year get there name 
+DESC:def what is the executor in a will 
