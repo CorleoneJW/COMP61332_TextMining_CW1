@@ -12,7 +12,7 @@ import configparser
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, help='Configuration file',default='config.ini')
-parser.add_argument('--train', action='store_true', help='Training mode - model is saved',default=True)
+parser.add_argument('--train', action='store_true', help='Training mode - model is saved')
 parser.add_argument('--test', action='store_true', help='Testing mode - needs a model to load')
 
 
