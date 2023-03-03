@@ -62,21 +62,27 @@ coarse/fine: each includes 2 models: bow and bilstm
 
 bow/bilstm: each includes 3 settings: random/ pretrained-freeze / pretrained- unfreeze
 
-Example:
+#### Coarse classes:
 
-For Fine label .ini, F stands for Fine
+| model                     | corresponding config file      |
+|---------------------------|--------------------------------|
+| BOW Random                | config_Bow_C_Random.ini        |
+| Bow Pretrained            | config_Bow_C_Pre.ini           |
+| Bow Pretrained(freeze)    | config_Bow_C_Pre_Freeze.ini    |
+| BiLSTM Random             | config_BiLstm_C_Random.ini     |
+| BiLSTM Pretrained         | config_BiLstm_C_Pre.ini        |
+| BiLSTM Pretrained(freeze) | config_BiLstm_C_Pre_Freeze.ini |
 
-`config_BiLSTM_F_Pre_Freeze.ini`
+#### Fine classes:
 
-`config_BiLSTM_F_Pre.ini`
-
-`config_BiLSTM_F_Random.ini`
-
-`config_Bow_F_Pre_Freeze.ini`
-
-`config_Bow_F_Pre.ini`
-
-`config_Bow_F_Random.ini`
+| model                     | corresponding config file      |
+|---------------------------|--------------------------------|
+| BOW Random                | config_Bow_F_Random.ini        |
+| Bow Pretrained            | config_Bow_F_Pre.ini           |
+| Bow Pretrained(freeze)    | config_Bow_F_Pre_Freeze.ini    |
+| BiLSTM Random             | config_BiLstm_F_Random.ini     |
+| BiLSTM Pretrained         | config_BiLstm_F_Pre.ini        |
+| BiLSTM Pretrained(freeze) | config_BiLstm_F_Pre_Freeze.ini |
 
 ### Requirements:
 
