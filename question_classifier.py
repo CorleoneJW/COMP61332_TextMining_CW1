@@ -477,8 +477,10 @@ class ClassifierTrainer(object):
 
     def train(self, n_epochs):
         self.classifier.train()
+
         best_f1 = 0
         for epoch in range(n_epochs):
+            print(self.model.embeddings.weight)
             temp_acc = 0
             temp_result = 0
             for inputs, labels in self.train_loader:
@@ -595,7 +597,11 @@ if __name__ == '__main__':
     model_name = config['model_params']['model_name'] # 'bow'
     label_mode =  config['model_params']['label_mode']  # 'coarse'
     embedding_mode = config['model_params']['embedding_mode']  # 'pretrained'
-    freeze_pretrained = bool(config['model_params']['freeze_pretrained']) # True
+    freeze_pretrained = config['model_params']['freeze_pretrained'] # True
+    if freeze_pretrained =='True':
+        freeze_pretrained = True
+    elif freeze_pretrained =='False':
+        freeze_pretrained = False
     embedding_dim = int(config['sentence_params']['embedding_dim'])
     max_len = int(config['sentence_params']['max_len'])
     k = int(config['sentence_params']['k'])
